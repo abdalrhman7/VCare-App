@@ -7,5 +7,3 @@
 - filter Doctors  by your city
 - Book an appointment with doctor
 - on boarding Screen
-- خى
-- خ
