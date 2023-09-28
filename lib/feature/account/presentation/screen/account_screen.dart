@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vcare_app/core/constants/app_color.dart';
 import 'package:vcare_app/core/widgets/main_button.dart';
 
 import '../../../../core/app_route/routes.dart';
@@ -24,24 +25,38 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const UserInfoBlocBuilder(),
-          const Spacer(),
-          MainButton(
-            text: 'Logout',
-            onTap: () {
-              BlocProvider.of<LoginCubit>(context).logout();
-              Navigator.of(context, rootNavigator: true)
-                  .pushNamedAndRemoveUntil(
-                      AppRoutes.loginScreen, (route) => false);
-            },
+    return RefreshIndicator(
+      color: kMainColor,
+      onRefresh: () {
+        return BlocProvider.of<UserInfoCubit>(context).getUserProfile();
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(
+            parent: BouncingScrollPhysics()),
+        child: Padding(
+          padding: EdgeInsets.all(16.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const UserInfoBlocBuilder(),
+              SizedBox(height: 0.32.sh),
+              BlocBuilder<UserInfoCubit, UserInfoState>(
+                builder: (context, state) {
+                  return MainButton(
+                    text: 'Logout',
+                    onTap: () {
+                      BlocProvider.of<LoginCubit>(context).logout();
+                      Navigator.of(context, rootNavigator: true)
+                          .pushNamedAndRemoveUntil(
+                          AppRoutes.loginScreen, (route) => false);
+                    },
+                  );
+                },
+              ),
+              SizedBox(height: 16.h),
+            ],
           ),
-          SizedBox(height: 16.h),
-        ],
+        ),
       ),
     );
   }

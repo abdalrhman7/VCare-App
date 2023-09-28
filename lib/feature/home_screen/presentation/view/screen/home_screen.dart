@@ -59,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget buildSpecializationListView(List<HomeModel> homeModel) {
     return Expanded(
       child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         itemCount: homeModel.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
@@ -87,10 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
       height: 200.h,
       width: double.infinity,
       child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         separatorBuilder: (context, index) => SizedBox(width: 10.w),
         scrollDirection: Axis.horizontal,
-        itemCount: homeModel.length - 2,
+        itemCount: homeModel.length <= 2 ? 2 :  3,
         itemBuilder: (context, index) {
           return buildDoctorItem(
               homeModel[index], homeModel[index].doctors![index]);
