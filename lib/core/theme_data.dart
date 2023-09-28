@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vcare_app/core/constants/app_color.dart';
 
-import 'constants/text_style.dart';
 
 ThemeData themeData(BuildContext context) {
   return ThemeData(

@@ -6,7 +6,7 @@ import 'package:vcare_app/core/app_route/routes.dart';
 import 'package:vcare_app/core/constants/app_color.dart';
 import 'package:vcare_app/core/constants/text_style.dart';
 
-import '../../core/utilities/cache/cache_helpler.dart';
+import '../../core/local_database/cache_helpler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -58,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Center(
           child: Text(
             'VCare',
-            style: Style.textStyle16,
+            style: Style.textStyle32.copyWith(color: Colors.white),
           ),
         ),
       ),

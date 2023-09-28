@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,7 +8,7 @@ import '../../../../../core/utilities/my_validators.dart';
 import '../../../../../core/widgets/CustomCircularProgressIndicator.dart';
 import '../../../../../core/widgets/default_text_form_filed.dart';
 import '../../../../../core/widgets/main_button.dart';
-import '../../../business_logic/login_cubit/login_cubit.dart';
+import '../../business_logic/login_cubit/login_cubit.dart';
 import '../widget/build_register_or_login_here_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,8 +24,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   void initState() {
-    _emailController = TextEditingController(text: 'aa@aa.com');
-    _passwordController = TextEditingController(text: 'password');
+    _emailController = TextEditingController(text: 'nopy@nopy.com');
+    _passwordController = TextEditingController(text: '123456');
     super.initState();
   }
 

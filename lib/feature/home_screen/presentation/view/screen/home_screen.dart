@@ -8,7 +8,6 @@ import 'package:vcare_app/core/widgets/CustomCircularProgressIndicator.dart';
 import 'package:vcare_app/feature/home_screen/business_logic/home_cubit/home_cubit.dart';
 
 import '../../../../../core/app_route/routes.dart';
-import '../../../../../core/widgets/drawer.dart';
 import '../../../date/model/doctor_model.dart';
 import '../../../date/model/home_model.dart';
 
@@ -28,12 +27,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.r),
-      child: Column(
-        children: [
-          buildBlocBuilder(),
-        ],
+    return RefreshIndicator(
+      onRefresh: () {
+      return  BlocProvider.of<HomeCubit>(context).getHomeDoctors();
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8.r),
+        child: Column(
+          children: [
+            buildBlocBuilder(),
+          ],
+        ),
       ),
     );
   }

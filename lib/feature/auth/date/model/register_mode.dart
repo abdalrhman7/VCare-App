@@ -3,8 +3,8 @@ class RegisterModel {
   final String email;
   final String phone;
   final int gender;
-  final String password;
-  final String passwordConfirmation;
+  final String? password;
+  final String? passwordConfirmation;
 
   RegisterModel({
     required this.name,
@@ -16,14 +16,21 @@ class RegisterModel {
   });
 
   Map<String, dynamic> toJson() {
+    if (password != null && password != '') {
+      return {
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'gender': gender,
+        'password': password,
+        'password_confirmation': passwordConfirmation,
+      };
+    }
     return {
       'name': name,
       'email': email,
       'phone': phone,
       'gender': gender,
-      'password': password,
-      'password_confirmation': passwordConfirmation,
     };
   }
-
 }

@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-import 'api_constants.dart';
 
 class WebService {
   final Dio _dio;
@@ -9,9 +8,11 @@ class WebService {
 
   Future<Map<String, dynamic>> getData({
     required String endPoint,
+     Map<String, dynamic>? data,
     String? token,
   }) async {
     Response response = await _dio.get(endPoint,
+        queryParameters: data,
         options: Options(
           headers: {
             'Authorization': 'Bearer ${token ?? ''}',

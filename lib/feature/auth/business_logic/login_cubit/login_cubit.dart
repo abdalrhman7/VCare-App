@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:vcare_app/feature/auth/date/repo/auth_repo.dart';
 
-import '../../../../core/utilities/cache/secure_storage.dart';
+import '../../../../core/local_database/secure_storage.dart';
 
 part 'login_state.dart';
 

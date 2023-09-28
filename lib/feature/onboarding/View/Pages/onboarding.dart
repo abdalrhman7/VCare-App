@@ -3,7 +3,7 @@ import 'package:onboarding/onboarding.dart';
 import 'package:vcare_app/core/app_route/routes.dart';
 import 'package:vcare_app/core/constants/app_color.dart';
 
-import '../../../../core/utilities/cache/cache_helpler.dart';
+import '../../../../core/local_database/cache_helpler.dart';
 import '../Components/onboarding_page_one.dart';
 import '../Components/onboarding_page_three.dart';
 import '../Components/onboarding_page_two.dart';

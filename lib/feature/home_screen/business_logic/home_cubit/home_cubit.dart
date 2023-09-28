@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:vcare_app/core/utilities/cache/secure_storage.dart';
+import 'package:vcare_app/core/local_database/secure_storage.dart';
 import 'package:vcare_app/feature/home_screen/date/repo/home_repo.dart';
 
 import '../../date/model/home_model.dart';
@@ -13,11 +13,11 @@ class HomeCubit extends Cubit<HomeState> {
   final HomeRepo homeRepo;
   final SecureStorage secureStorage;
 
-  void getHomeDoctors() async{
+  Future<void> getHomeDoctors() async {
     String? token = await secureStorage.readSecureData('token');
     emit(HomeLoading());
     homeRepo
-        .getHomeDoctors(token : token!)
+        .getHomeDoctors(token: token!)
         .then((value) => emit(HomeSuccess(value)))
         .catchError(
           (onError) => emit(
@@ -25,6 +25,4 @@ class HomeCubit extends Cubit<HomeState> {
           ),
         );
   }
-
-
 }

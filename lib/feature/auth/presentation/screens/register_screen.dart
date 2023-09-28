@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -236,16 +235,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 }
-// onPressed: () {
-// if (formKey.currentState?.validate() == false) {
-// return;
-// }
-// cupit.register(
-// name: nameController.text,
-// email: emailController.text,
-// phone: phoneController.text,
-// gender: (male) ? 0 : 1,
-// password: passwordController.text,
-// passwordConfirmation:
-// passwordConfirmController.text);
-// },

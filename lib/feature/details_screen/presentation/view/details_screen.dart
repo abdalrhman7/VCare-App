@@ -1,104 +1,69 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vcare_app/core/constants/app_color.dart';
 import 'package:vcare_app/core/constants/text_style.dart';
-import 'package:vcare_app/feature/home_screen/date/model/home_model.dart';
+import 'package:vcare_app/feature/details_screen/business_logic/store_appointment_cubit/store_appointment_cubit.dart';
 
+import '../../../../core/function/main_snack_bar.dart';
+import '../../../../core/widgets/CustomCircularProgressIndicator.dart';
 import '../../../../core/widgets/main_button.dart';
 import '../../../home_screen/date/model/doctor_model.dart';
+import '../../data/model/appointment_model.dart';
+import '../widget/date_text_field.dart';
+import '../widget/doctor_photo.dart';
+import '../widget/time_text_field.dart';
 
 class DetailsScreen extends StatelessWidget {
   final DoctorModel doctor;
 
   DetailsScreen({super.key, required this.doctor});
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController timeController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    var cubit = BlocProvider.of<StoreAppointmentCubit>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: 0.3.sh,
-              width: double.infinity,
-              color: kMainColor,
-              child: FancyShimmerImage(
-                width: double.infinity,
-                errorWidget: const Icon(Icons.error),
-                imageUrl: doctor.photo!,
-                boxFit: BoxFit.fill,
-              ),
-            ),
+            DoctorPhoto(doctor: doctor),
             SizedBox(height: 20.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 22.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    doctor.name!,
-                    style: const TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w400,
-                      color: kMainColor,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(doctor.name!, style: Style.textStyle32),
+                    SizedBox(height: 20.h),
+                    Text(
+                      doctor.description!,
+                      style: Style.textStyle18.copyWith(color: kMainColor),
                     ),
-                  ),
-                  SizedBox(height: 20.h),
-                  Text(
-                    doctor.description!,
-                    style: Style.textStyle18.copyWith(color: kMainColor),
-                  ),
-                  SizedBox(height: 10.h),
-                  Divider(thickness: 1, color: Colors.grey.shade500),
-                  SizedBox(height: 20.h),
-                  _textInfo(text: 'Select date'),
-                  SizedBox(height: 20.h),
-                  buildShowTextFiled(context),
-                  SizedBox(height: 20.h),
-                  _textInfo(text: 'Select time'),
-                  SizedBox(height: 20.h),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ChoseTimeWidget(),
-                      ChoseTimeWidget(),
-                      ChoseTimeWidget(),
-                      ChoseTimeWidget(),
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-                  MainButton(
-                    text: 'Book an appointment',
-                    onTap: () {},
-                  ),
-                ],
+                    SizedBox(height: 10.h),
+                    Divider(thickness: 1, color: Colors.grey.shade500),
+                    SizedBox(height: 20.h),
+                    _textInfo(text: 'Select date'),
+                    SizedBox(height: 20.h),
+                    DateTextField(dateController: dateController),
+                    SizedBox(height: 20.h),
+                    _textInfo(text: 'Select time'),
+                    SizedBox(height: 20.h),
+                    TimeTextField(timeController: timeController),
+                    SizedBox(height: 20.h),
+                    SizedBox(height: 20.h),
+                    buildBlocConsumerMainButton(cubit, doctor),
+                  ],
+                ),
               ),
             )
           ],
         ),
       ),
-    );
-  }
-
-  Widget buildShowTextFiled(BuildContext context) {
-    return showTextFiled(
-      context,
-      () async {
-        final selectedDate = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime(2023),
-          lastDate: DateTime(2030),
-        );
-        if (selectedDate != null) {
-          final formattedDate =
-              '${selectedDate.year.toString().substring(2)}/${selectedDate.month.toString().padLeft(2, '0')}/${selectedDate.day.toString().padLeft(2, '0')}';
-          controller.text = formattedDate;
-        }
-      },
     );
   }
 
@@ -110,38 +75,37 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget showTextFiled(BuildContext context, VoidCallback onTap) {
-    return TextFormField(
-      controller: controller,
-      onTap: onTap,
-      decoration: InputDecoration(
-        hintText: controller.text.isEmpty ? 'yy/mm//dd' : controller.text,
-        hintStyle: const TextStyle(
-          fontWeight: FontWeight.w400,
-          fontSize: 21,
-          color: Color(0xff030E19),
-        ),
-      ),
+  Widget buildBlocConsumerMainButton(
+      StoreAppointmentCubit cubit, DoctorModel doctor) {
+    return BlocConsumer<StoreAppointmentCubit, StoreAppointmentState>(
+      listener: (context, state) {
+        if (state is StoreAppointmentSuccess) {
+          mainSnackBar(context, 'Store Appointment Success');
+        }
+        if (state is StoreAppointmentError) {
+          mainSnackBar(context, 'Try again later');
+        }
+      },
+      builder: (context, state) {
+        if (state is StoreAppointmentLoading) {
+          return const CustomCircularProgressIndicator();
+        }
+        return MainButton(
+          text: 'Book an appointment',
+          onTap: () {
+            validateAndSubmit(cubit, doctor);
+          },
+        );
+      },
     );
   }
-}
 
-class ChoseTimeWidget extends StatelessWidget {
-  const ChoseTimeWidget({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 22.r, vertical: 8.r),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(22), color: kMainColor),
-      child: Text(
-        '9:00',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w400,
-        ),
-      ),
-    );
+  void validateAndSubmit(StoreAppointmentCubit cubit, DoctorModel doctor) {
+    if (_formKey.currentState!.validate()) {
+      StoreAppointmentModel storeAppointment = StoreAppointmentModel(
+          doctorId: doctor.id!,
+          startTime: '${dateController.text} ${timeController.text}');
+      cubit.storeAppointment(storeAppointment);
+    }
   }
 }
